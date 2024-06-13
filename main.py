@@ -9,6 +9,10 @@ bg = transform.scale(image.load("bg.jpg"), (W, H))#трансформ карти
 
 clock = time.Clock()
 
+font.init()
+font1 = font.SysFont("Arial", 30, bold=True)
+font2 = font.SysFont("Arial", 40, italic=True)
+
 class GameSprite(sprite.Sprite):
     def __init__(self, img, x, y, width, height, speed_x, speed_y):
         super().__init__()
@@ -47,9 +51,14 @@ class Ball(GameSprite):
         self.rect.x +=self.speed_x
         self.rect.y -=self.speed_y
 
-player1 = Player("jj.jpg", 5, 5, 30, 100, 10, 10)
-player2 = Player("bg173207.jpg", 750, 250, 30, 100, 10, 10)
-ball = Ball("images.jpg", W / 2, H / 2, 70, 70, 5, 5)
+player1 = Player("jj.png", 5, 5, 30, 100, 10, 10)
+player2 = Player("ii.png", 750, 250, 30, 100, 10, 10)
+ball = Ball("00.png", W / 2, H / 2, 70, 70, 5, 5)
+
+player1_points = 0
+player2_points = 0
+
+
 
 game = True
 while game:
@@ -63,6 +72,11 @@ while game:
     ball.draw()
     ball.move()
 
+    player1_txt = font1.render(str(player1_points), 1, (255, 255, 255))
+    player2_txt = font1.render(str(player2_points), 1, (255, 255, 255))
+
+    window.blit(player1_txt, (90, 10))
+    window.blit(player2_txt, (700, 10))
     for e in event.get():
         if e.type == QUIT:
             game = False
@@ -74,6 +88,17 @@ while game:
     if ball.rect.y < 0 or ball.rect.y > H - ball.height:
         ball.speed_y *= -1
     
-    clock.tick(100)
+    if ball.rect.x < 0:
+        player2_points += 1
+        ball.rect.x = W / 2
+        ball.rect.y = H / 2
+    
+    if ball.rect.x > W:
+        player1_points += 1
+        ball.rect.x = W / 2
+        ball.rect.y = H / 2
+
+    clock.tick(300)
     display.update()
+    #FPS
     
